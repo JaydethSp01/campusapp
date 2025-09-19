@@ -46,9 +46,11 @@ psql --version >nul 2>&1
 if %errorLevel% neq 0 (
     echo %YELLOW%PostgreSQL no encontrado. Instalando...%RESET%
     echo Descargando PostgreSQL...
-    powershell -Command "Invoke-WebRequest -Uri 'https://get.enterprisedb.com/postgresql/postgresql-13.7-1-windows-x64.exe' -OutFile 'postgresql-installer.exe'"
-    echo Instalando PostgreSQL...
-    postgresql-installer.exe --mode unattended --superpassword "admin123" --servicename "postgresql" --serviceaccount "postgres" --servicepassword "admin123"
+    powershell -Command "Invoke-WebRequest -Uri 'https://get.enterprisedb.com/postgresql/postgresql-13.7-1-windows-x64.exe' -OutFile 'postgresql-installer.exe' -UseBasicParsing"
+    echo Instalando PostgreSQL (esto puede tomar varios minutos)...
+    postgresql-installer.exe --mode unattended --superpassword "admin123" --servicename "postgresql" --serviceaccount "postgres" --servicepassword "admin123" --enable-components "server,pgAdmin,commandlinetools" --disable-components "stackbuilder"
+    echo Esperando a que se complete la instalacion...
+    timeout /t 15 /nobreak >nul
     echo %GREEN%PostgreSQL instalado correctamente%RESET%
     del postgresql-installer.exe
 ) else (
