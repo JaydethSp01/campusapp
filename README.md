@@ -2,6 +2,21 @@
 
 Aplicación móvil integral de bienestar y gestión universitaria que permite a estudiantes reportar daños de infraestructura, registrar su bienestar personal y evaluar servicios de comedor, alineada con el **ODS 3: Salud y Bienestar**.
 
+##envs
+leNODE_ENV=development
+PORT=3000
+DATABASE_URL=postgresql://campusapp_user:campusapp_password@localhost:5432/campusapp_db
+JWT_SECRET=your_super_secret_jwt_key_here_campusapp_2024
+JWT_REFRESH_SECRET=your_super_secret_refresh_key_here_campusapp_2024
+JWT_EXPIRES_IN=1h
+JWT_REFRESH_EXPIRES_IN=7d
+BCRYPT_ROUNDS=12
+UPLOAD_PATH=./uploads
+MAX_FILE_SIZE=5242880
+RATE_LIMIT_WINDOW_MS=900000
+RATE_LIMIT_MAX_REQUESTS=100
+
+
 ## 🏗️ Arquitectura del Sistema
 
 ### ¿Por qué Arquitectura Hexagonal?
