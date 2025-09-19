@@ -3,7 +3,10 @@
 Aplicación móvil integral de bienestar y gestión universitaria que permite a estudiantes reportar daños de infraestructura, registrar su bienestar personal y evaluar servicios de comedor, alineada con el **ODS 3: Salud y Bienestar**.
 
 ##envs
-leNODE_ENV=development
+
+Crear un archivo .env copiar y pegar esto en backend:
+
+NODE_ENV=development
 PORT=3000
 DATABASE_URL=postgresql://campusapp_user:campusapp_password@localhost:5432/campusapp_db
 JWT_SECRET=your_super_secret_jwt_key_here_campusapp_2024
