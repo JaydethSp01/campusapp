@@ -22,3 +22,4 @@ echo "Backend API: http://localhost:3000"
 echo "Health Check: http://localhost:3000/health"
 echo "Frontend: Aplicación móvil instalada en el dispositivo"
 
+

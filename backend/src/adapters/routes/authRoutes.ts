@@ -15,3 +15,4 @@ export const createAuthRoutes = (authController: AuthController): Router => {
   return router;
 };
 
+

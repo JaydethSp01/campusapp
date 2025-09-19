@@ -14,3 +14,4 @@ export interface NotificationService {
   sendEmergencyAlert(usuarioId: string, mensaje: string): Promise<boolean>;
 }
 
+

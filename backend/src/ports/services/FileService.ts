@@ -5,3 +5,4 @@ export interface FileService {
   validateFile(file: Buffer, mimetype: string): boolean;
 }
 
+

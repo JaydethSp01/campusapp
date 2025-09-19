@@ -32,14 +32,16 @@ interface DocenteDashboardScreenProps {
   onNavigate: (screen: string) => void;
 }
 
-export const DocenteDashboardScreen: React.FC<DocenteDashboardScreenProps> = ({ onNavigate }) => {
-  const [activeTab, setActiveTab] = useState('resumen');
+export const DocenteDashboardScreen: React.FC<DocenteDashboardScreenProps> = ({
+  onNavigate,
+}) => {
+  const [activeTab, setActiveTab] = useState("resumen");
   const [showAnonymous, setShowAnonymous] = useState(true);
-  const [timeRange, setTimeRange] = useState('30d');
+  const [timeRange, setTimeRange] = useState("30d");
 
   // Datos de ejemplo para los gráficos
   const wellnessTrendData = {
-    labels: ['Sem 1', 'Sem 2', 'Sem 3', 'Sem 4', 'Sem 5'],
+    labels: ["Sem 1", "Sem 2", "Sem 3", "Sem 4", "Sem 5"],
     datasets: [
       {
         data: [6.2, 6.8, 7.1, 6.9, 7.3],
@@ -60,7 +62,7 @@ export const DocenteDashboardScreen: React.FC<DocenteDashboardScreenProps> = ({ 
   };
 
   const menuSatisfactionData = {
-    labels: ['Sem 1', 'Sem 2', 'Sem 3', 'Sem 4', 'Sem 5'],
+    labels: ["Sem 1", "Sem 2", "Sem 3", "Sem 4", "Sem 5"],
     datasets: [
       {
         data: [7.2, 7.8, 7.5, 8.1, 7.9],
@@ -76,7 +78,7 @@ export const DocenteDashboardScreen: React.FC<DocenteDashboardScreenProps> = ({ 
   };
 
   const facilitiesData = {
-    labels: ['Aula 8204', 'Lab Redes', 'Biblioteca', 'Cafetería', 'Auditorio'],
+    labels: ["Aula 8204", "Lab Redes", "Biblioteca", "Cafetería", "Auditorio"],
     datasets: [
       {
         data: [7, 5, 4, 3, 2],
@@ -87,30 +89,30 @@ export const DocenteDashboardScreen: React.FC<DocenteDashboardScreenProps> = ({ 
 
   const foodDistributionData = [
     {
-      name: 'Buena',
+      name: "Buena",
       population: 45,
-      color: '#EF4444',
-      legendFontColor: '#7F7F7F',
+      color: "#EF4444",
+      legendFontColor: "#7F7F7F",
       legendFontSize: 12,
     },
     {
-      name: 'Media',
+      name: "Media",
       population: 35,
-      color: '#3B82F6',
-      legendFontColor: '#7F7F7F',
+      color: "#3B82F6",
+      legendFontColor: "#7F7F7F",
       legendFontSize: 12,
     },
     {
-      name: 'Pobre',
+      name: "Pobre",
       population: 20,
-      color: '#1E40AF',
-      legendFontColor: '#7F7F7F',
+      color: "#1E40AF",
+      legendFontColor: "#7F7F7F",
       legendFontSize: 12,
     },
   ];
 
   const reportsByStatusData = {
-    labels: ['Pendiente', 'En Proceso', 'Resuelto'],
+    labels: ["Pendiente", "En Proceso", "Resuelto"],
     datasets: [
       {
         data: [8, 5, 20],
@@ -120,27 +122,27 @@ export const DocenteDashboardScreen: React.FC<DocenteDashboardScreenProps> = ({ 
   };
 
   const tabs = [
-    { id: 'resumen', label: 'Resumen', icon: 'home' },
-    { id: 'bienestar', label: 'Bienestar', icon: 'heart' },
-    { id: 'reportes', label: 'Reportes', icon: 'document-text' },
-    { id: 'menu', label: 'Menú', icon: 'restaurant' },
-    { id: 'estudiantes', label: 'Estudiantes', icon: 'people' },
-    { id: 'alertas', label: 'Alertas', icon: 'warning' },
+    { id: "resumen", label: "Dashboard", icon: "home" },
+    { id: "bienestar", label: "Bienestar", icon: "heart" },
+    { id: "reportes", label: "Reportes", icon: "document-text" },
+    { id: "menu", label: "Menú", icon: "restaurant" },
+    { id: "estudiantes", label: "Estudiantes", icon: "people" },
+    { id: "alertas", label: "SOS", icon: "warning" },
   ];
 
   const renderTabButton = (tab: any, index: number) => {
     const isActive = activeTab === tab.id;
-    
+
     return (
       <TouchableOpacity
         key={tab.id}
         style={[styles.tab, isActive && styles.activeTab]}
         onPress={() => setActiveTab(tab.id)}
       >
-        <Ionicons 
-          name={tab.icon as any} 
-          size={16} 
-          color={isActive ? '#8B5CF6' : '#6B7280'} 
+        <Ionicons
+          name={tab.icon as any}
+          size={16}
+          color={isActive ? "#8B5CF6" : "#6B7280"}
         />
         <Text style={[styles.tabText, isActive && styles.activeTabText]}>
           {tab.label}
@@ -285,36 +287,46 @@ export const DocenteDashboardScreen: React.FC<DocenteDashboardScreenProps> = ({ 
             <Text style={styles.riskTagText}>Orientativo</Text>
           </View>
         </View>
-        <Text style={styles.riskSubtitle}>Reglas demo: estrés≥4 o sueño≤5.5</Text>
-        
+        <Text style={styles.riskSubtitle}>
+          Reglas demo: estrés≥4 o sueño≤5.5
+        </Text>
+
         <View style={styles.riskList}>
           <View style={styles.riskItem}>
             <Text style={styles.riskId}>ID 1001</Text>
-            <Text style={styles.riskMetrics}>Estrés 3/5 · Sueño 6.5h · Alim 2</Text>
+            <Text style={styles.riskMetrics}>
+              Estrés 3/5 · Sueño 6.5h · Alim 2
+            </Text>
             <View style={[styles.riskBadge, styles.riskLow]}>
               <Text style={styles.riskBadgeText}>bajo</Text>
             </View>
           </View>
-          
+
           <View style={styles.riskItem}>
             <Text style={styles.riskId}>ID 1002</Text>
-            <Text style={styles.riskMetrics}>Estrés 5/5 · Sueño 5.1h · Alim 1</Text>
+            <Text style={styles.riskMetrics}>
+              Estrés 5/5 · Sueño 5.1h · Alim 1
+            </Text>
             <View style={[styles.riskBadge, styles.riskHigh]}>
               <Text style={styles.riskBadgeText}>alto</Text>
             </View>
           </View>
-          
+
           <View style={styles.riskItem}>
             <Text style={styles.riskId}>ID 1003</Text>
-            <Text style={styles.riskMetrics}>Estrés 2/5 · Sueño 7.9h · Alim 3</Text>
+            <Text style={styles.riskMetrics}>
+              Estrés 2/5 · Sueño 7.9h · Alim 3
+            </Text>
             <View style={[styles.riskBadge, styles.riskLow]}>
               <Text style={styles.riskBadgeText}>bajo</Text>
             </View>
           </View>
-          
+
           <View style={styles.riskItem}>
             <Text style={styles.riskId}>ID 1004</Text>
-            <Text style={styles.riskMetrics}>Estrés 3/5 · Sueño 7h · Alim 2</Text>
+            <Text style={styles.riskMetrics}>
+              Estrés 3/5 · Sueño 7h · Alim 2
+            </Text>
             <View style={[styles.riskBadge, styles.riskLow]}>
               <Text style={styles.riskBadgeText}>bajo</Text>
             </View>
@@ -364,18 +376,20 @@ export const DocenteDashboardScreen: React.FC<DocenteDashboardScreenProps> = ({ 
       <View style={styles.ticketsSection}>
         <Text style={styles.sectionTitle}>Tickets recientes</Text>
         <Text style={styles.sectionSubtitle}>Pendientes y en proceso</Text>
-        
+
         <View style={styles.ticketList}>
           <View style={styles.ticketItem}>
             <View style={styles.ticketInfo}>
               <Text style={styles.ticketLocation}>Aula 204 - Bloque B</Text>
-              <Text style={styles.ticketDescription}>Proyector intermitente</Text>
+              <Text style={styles.ticketDescription}>
+                Proyector intermitente
+              </Text>
             </View>
             <View style={[styles.ticketStatus, styles.statusPending]}>
               <Text style={styles.ticketStatusText}>pendiente</Text>
             </View>
           </View>
-          
+
           <View style={styles.ticketItem}>
             <View style={styles.ticketInfo}>
               <Text style={styles.ticketLocation}>Lab Redes</Text>
@@ -412,7 +426,7 @@ export const DocenteDashboardScreen: React.FC<DocenteDashboardScreenProps> = ({ 
       <View style={styles.commentsSection}>
         <Text style={styles.sectionTitle}>Comentarios recientes</Text>
         <Text style={styles.sectionSubtitle}>Muestra 5</Text>
-        
+
         <View style={styles.commentList}>
           <Text style={styles.commentItem}>• La sopa estaba fría</Text>
           <Text style={styles.commentItem}>• Excelente sazón hoy</Text>
@@ -426,11 +440,11 @@ export const DocenteDashboardScreen: React.FC<DocenteDashboardScreenProps> = ({ 
 
   const renderContent = () => {
     switch (activeTab) {
-      case 'bienestar':
+      case "bienestar":
         return renderBienestarContent();
-      case 'reportes':
+      case "reportes":
         return renderReportesContent();
-      case 'menu':
+      case "menu":
         return renderMenuContent();
       default:
         return renderResumenContent();
@@ -440,23 +454,43 @@ export const DocenteDashboardScreen: React.FC<DocenteDashboardScreenProps> = ({ 
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
-      <LinearGradient
-        colors={['#7C3AED', '#A855F7']}
-        style={styles.header}
-      >
+      <LinearGradient colors={["#7C3AED", "#A855F7"]} style={styles.header}>
         <View style={styles.headerContent}>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.backButton}
-            onPress={() => onNavigate('HomeScreen')}
+            onPress={() => onNavigate("HomeScreen")}
+            activeOpacity={0.7}
           >
             <Ionicons name="arrow-back" size={24} color="white" />
+            <Text style={styles.backButtonText}>Salir</Text>
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Panel Docente</Text>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.headerIcon}
-            onPress={() => onNavigate('ConfigScreen')}
+            onPress={() => onNavigate("ConfigScreen")}
+            activeOpacity={0.7}
           >
             <Ionicons name="settings" size={24} color="white" />
+          </TouchableOpacity>
+        </View>
+
+        {/* Botones de navegación adicionales */}
+        <View style={styles.headerActions}>
+          <TouchableOpacity
+            style={styles.headerActionButton}
+            onPress={() => onNavigate("HomeScreen")}
+            activeOpacity={0.7}
+          >
+            <Ionicons name="home" size={20} color="white" />
+            <Text style={styles.headerActionText}>Inicio</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.headerActionButton}
+            onPress={() => onNavigate("ConfigScreen")}
+            activeOpacity={0.7}
+          >
+            <Ionicons name="person" size={20} color="white" />
+            <Text style={styles.headerActionText}>Perfil</Text>
           </TouchableOpacity>
         </View>
       </LinearGradient>
@@ -469,9 +503,17 @@ export const DocenteDashboardScreen: React.FC<DocenteDashboardScreenProps> = ({ 
       </View>
 
       {/* Content */}
-      <View style={styles.content}>
-        {renderContent()}
-      </View>
+      <View style={styles.content}>{renderContent()}</View>
+
+      {/* Floating Exit Button */}
+      <TouchableOpacity
+        style={styles.floatingExitButton}
+        onPress={() => onNavigate("HomeScreen")}
+        activeOpacity={0.8}
+      >
+        <Ionicons name="home" size={24} color="white" />
+        <Text style={styles.floatingExitText}>Inicio</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };
@@ -479,7 +521,7 @@ export const DocenteDashboardScreen: React.FC<DocenteDashboardScreenProps> = ({ 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F9FAFB',
+    backgroundColor: "#F9FAFB",
   },
   header: {
     paddingTop: 50,
@@ -487,128 +529,165 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   headerContent: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   backButton: {
-    padding: 8,
-    borderRadius: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 12,
+    borderRadius: 25,
+    backgroundColor: "rgba(255, 255, 255, 0.25)",
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.3)",
+    minWidth: 80,
+    justifyContent: "center",
+  },
+  backButtonText: {
+    color: "white",
+    fontSize: 14,
+    fontWeight: "600",
+    marginLeft: 4,
   },
   headerTitle: {
     fontSize: 20,
-    fontWeight: '700',
-    color: '#FFFFFF',
+    fontWeight: "700",
+    color: "#FFFFFF",
     flex: 1,
-    textAlign: 'center',
+    textAlign: "center",
   },
   headerIcon: {
-    padding: 8,
+    padding: 12,
+    borderRadius: 25,
+    backgroundColor: "rgba(255, 255, 255, 0.25)",
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.3)",
+  },
+  headerActions: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 10,
+    gap: 20,
+  },
+  headerActionButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 8,
+    paddingHorizontal: 16,
     borderRadius: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.3)",
+  },
+  headerActionText: {
+    color: "white",
+    fontSize: 14,
+    fontWeight: "600",
+    marginLeft: 6,
   },
   tabContainer: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     paddingHorizontal: 20,
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
+    borderBottomColor: "#E5E7EB",
   },
   tab: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: 16,
     paddingVertical: 8,
     marginRight: 8,
     borderRadius: 8,
-    backgroundColor: '#F3F4F6',
+    backgroundColor: "#F3F4F6",
   },
   activeTab: {
-    backgroundColor: '#8B5CF6',
+    backgroundColor: "#8B5CF6",
   },
   tabText: {
     fontSize: 14,
-    color: '#6B7280',
+    color: "#6B7280",
     marginLeft: 6,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   activeTabText: {
-    color: '#FFFFFF',
-    fontWeight: '600',
+    color: "#FFFFFF",
+    fontWeight: "600",
   },
   content: {
     flex: 1,
   },
   metricsRow: {
-    flexDirection: 'row',
+    flexDirection: "row",
     paddingHorizontal: 20,
     marginVertical: 8,
   },
   bottomChartsRow: {
-    flexDirection: 'row',
+    flexDirection: "row",
     paddingHorizontal: 20,
   },
   halfWidth: {
     flex: 1,
   },
   riskSection: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     borderRadius: 16,
     padding: 20,
     marginHorizontal: 20,
     marginVertical: 8,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
     shadowRadius: 12,
     elevation: 8,
   },
   riskHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 8,
   },
   riskTitle: {
     fontSize: 18,
-    fontWeight: '700',
-    color: '#1F2937',
+    fontWeight: "700",
+    color: "#1F2937",
   },
   riskTag: {
-    backgroundColor: '#FEF3C7',
+    backgroundColor: "#FEF3C7",
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 12,
   },
   riskTagText: {
     fontSize: 12,
-    color: '#D97706',
-    fontWeight: '600',
+    color: "#D97706",
+    fontWeight: "600",
   },
   riskSubtitle: {
     fontSize: 14,
-    color: '#6B7280',
+    color: "#6B7280",
     marginBottom: 16,
   },
   riskList: {
     gap: 12,
   },
   riskItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingVertical: 8,
   },
   riskId: {
     fontSize: 14,
-    fontWeight: '600',
-    color: '#1F2937',
+    fontWeight: "600",
+    color: "#1F2937",
     width: 60,
   },
   riskMetrics: {
     fontSize: 14,
-    color: '#6B7280',
+    color: "#6B7280",
     flex: 1,
     marginLeft: 12,
   },
@@ -618,23 +697,23 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   riskLow: {
-    backgroundColor: '#D1FAE5',
+    backgroundColor: "#D1FAE5",
   },
   riskHigh: {
-    backgroundColor: '#FEE2E2',
+    backgroundColor: "#FEE2E2",
   },
   riskBadgeText: {
     fontSize: 12,
-    fontWeight: '600',
-    color: '#FFFFFF',
+    fontWeight: "600",
+    color: "#FFFFFF",
   },
   ticketsSection: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     borderRadius: 16,
     padding: 20,
     marginHorizontal: 20,
     marginVertical: 8,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
     shadowRadius: 12,
@@ -642,22 +721,22 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: '700',
-    color: '#1F2937',
+    fontWeight: "700",
+    color: "#1F2937",
     marginBottom: 4,
   },
   sectionSubtitle: {
     fontSize: 14,
-    color: '#6B7280',
+    color: "#6B7280",
     marginBottom: 16,
   },
   ticketList: {
     gap: 12,
   },
   ticketItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingVertical: 8,
   },
   ticketInfo: {
@@ -665,12 +744,12 @@ const styles = StyleSheet.create({
   },
   ticketLocation: {
     fontSize: 14,
-    fontWeight: '600',
-    color: '#1F2937',
+    fontWeight: "600",
+    color: "#1F2937",
   },
   ticketDescription: {
     fontSize: 14,
-    color: '#6B7280',
+    color: "#6B7280",
   },
   ticketStatus: {
     paddingHorizontal: 12,
@@ -678,23 +757,23 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   statusPending: {
-    backgroundColor: '#FEE2E2',
+    backgroundColor: "#FEE2E2",
   },
   statusInProgress: {
-    backgroundColor: '#FEF3C7',
+    backgroundColor: "#FEF3C7",
   },
   ticketStatusText: {
     fontSize: 12,
-    fontWeight: '600',
-    color: '#FFFFFF',
+    fontWeight: "600",
+    color: "#FFFFFF",
   },
   commentsSection: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     borderRadius: 16,
     padding: 20,
     marginHorizontal: 20,
     marginVertical: 8,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
     shadowRadius: 12,
@@ -705,7 +784,31 @@ const styles = StyleSheet.create({
   },
   commentItem: {
     fontSize: 14,
-    color: '#374151',
+    color: "#374151",
     lineHeight: 20,
+  },
+  floatingExitButton: {
+    position: "absolute",
+    bottom: 30,
+    right: 20,
+    backgroundColor: "#8B5CF6",
+    borderRadius: 30,
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    flexDirection: "row",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
+    borderWidth: 2,
+    borderColor: "rgba(255, 255, 255, 0.2)",
+  },
+  floatingExitText: {
+    color: "white",
+    fontSize: 14,
+    fontWeight: "600",
+    marginLeft: 8,
   },
 });

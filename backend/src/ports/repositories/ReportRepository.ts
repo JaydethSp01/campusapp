@@ -46,3 +46,4 @@ export interface ReportRepository {
   getEstadoHistorial(reporteId: string): Promise<ReporteEstadoHistorial[]>;
 }
 
+

@@ -44,3 +44,4 @@ export const createMenuRoutes = (
   return router;
 };
 
+

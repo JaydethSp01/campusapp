@@ -41,3 +41,4 @@ export interface WellnessRepository {
   getAcosoCasosByUsuario(usuarioId: string): Promise<AcosoCaso[]>;
 }
 
+

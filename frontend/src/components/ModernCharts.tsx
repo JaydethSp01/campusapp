@@ -89,7 +89,7 @@ export const LineChartCard: React.FC<LineChartCardProps> = ({
           style={styles.chart}
           withDots={true}
           withShadow={false}
-          withScrollableDot={true}
+          withScrollableDot={false}
         />
       </View>
     </AnimatedCard>

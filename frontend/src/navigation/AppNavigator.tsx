@@ -61,47 +61,50 @@ export const AppNavigator: React.FC = () => {
   }
 
   // Check if user has admin/teacher permissions
-  const isAdmin = permissions.canViewAnalytics || permissions.canManageUsers;
-  const isDocente = user?.roles?.some((role: any) => 
-    (typeof role === 'string' ? role : role.nombre) === 'docente'
+  const isAdmin = permissions.canViewAnalytics && permissions.canManageUsers;
+  const isDocente = user?.roles?.some(
+    (role: any) => (typeof role === "string" ? role : role.nombre) === "docente"
   );
 
   const handleNavigate = (screen: string) => {
     // Mapear nombres de pantalla a screens del navegador
     const screenMap: { [key: string]: Screen } = {
-      'HomeScreen': 'home',
-      'ReportScreen': 'report',
-      'WellnessScreen': 'wellness',
-      'MenuScreen': 'menu',
-      'NotificationsScreen': 'notifications',
-      'ConfigScreen': 'config',
-      'AdminDashboardScreen': 'admin-dashboard',
-      'AdminWellnessScreen': 'admin-wellness',
-      'AdminSOSScreen': 'admin-sos',
-      'AdminStudentsScreen': 'admin-students',
-      'AdminMenuScreen': 'admin-menu',
-      'AdminReportsScreen': 'admin-reports',
-      'DocenteDashboardScreen': 'docente-dashboard',
+      HomeScreen: "home",
+      ReportScreen: "report",
+      WellnessScreen: "wellness",
+      MenuScreen: "menu",
+      NotificationsScreen: "notifications",
+      ConfigScreen: "config",
+      AdminDashboardScreen: "admin-dashboard",
+      AdminWellnessScreen: "admin-wellness",
+      AdminSOSScreen: "admin-sos",
+      AdminStudentsScreen: "admin-students",
+      AdminMenuScreen: "admin-menu",
+      AdminReportsScreen: "admin-reports",
+      DocenteDashboardScreen: "docente-dashboard",
     };
 
-    const targetScreen = screenMap[screen] || screen as Screen;
-    
+    const targetScreen = screenMap[screen] || (screen as Screen);
+
     // Validar permisos según el tipo de pantalla
     let hasPermission = false;
-    
-    if (targetScreen === 'home' || targetScreen === 'config') {
+
+    if (targetScreen === "home" || targetScreen === "config") {
       hasPermission = true;
-    } else if (targetScreen === 'report' && permissions.canViewReports) {
+    } else if (targetScreen === "report" && permissions.canViewReports) {
       hasPermission = true;
-    } else if (targetScreen === 'wellness' && permissions.canViewWellness) {
+    } else if (targetScreen === "wellness" && permissions.canViewWellness) {
       hasPermission = true;
-    } else if (targetScreen === 'menu' && permissions.canViewMenu) {
+    } else if (targetScreen === "menu" && permissions.canViewMenu) {
       hasPermission = true;
-    } else if (targetScreen === 'notifications' && permissions.canViewNotifications) {
+    } else if (
+      targetScreen === "notifications" &&
+      permissions.canViewNotifications
+    ) {
       hasPermission = true;
-    } else if (targetScreen.startsWith('admin-') && (isAdmin || isDocente)) {
+    } else if (targetScreen.startsWith("admin-") && isAdmin) {
       hasPermission = true;
-    } else if (targetScreen === 'docente-dashboard' && isDocente) {
+    } else if (targetScreen === "docente-dashboard" && isDocente) {
       hasPermission = true;
     }
 
@@ -110,7 +113,7 @@ export const AppNavigator: React.FC = () => {
     } else {
       console.warn(`Usuario no tiene permisos para acceder a ${screen}`);
       // Redirigir al home si no tiene permisos
-      setCurrentScreen('home');
+      setCurrentScreen("home");
     }
   };
 
@@ -149,10 +152,13 @@ export const AppNavigator: React.FC = () => {
     default:
       // Pantalla por defecto según el rol del usuario
       if (isDocente && !isAdmin) {
+        setCurrentScreen("docente-dashboard");
         return <DocenteDashboardScreen onNavigate={handleNavigate} />;
       } else if (isAdmin) {
+        setCurrentScreen("admin-dashboard");
         return <AdminDashboardScreen onNavigate={handleNavigate} />;
       } else {
+        setCurrentScreen("home");
         return <HomeScreen onNavigate={handleNavigate} />;
       }
   }

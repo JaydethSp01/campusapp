@@ -48,3 +48,4 @@ echo "4. Ejecuta los datos de prueba: npm run db:seed"
 echo "5. Inicia el backend: cd backend && npm run dev"
 echo "6. Inicia el frontend: cd frontend && npm start"
 
+

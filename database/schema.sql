@@ -206,3 +206,4 @@ CREATE TRIGGER update_reportes_danio_updated_at BEFORE UPDATE ON reportes_danio 
 CREATE TRIGGER update_acoso_casos_updated_at BEFORE UPDATE ON acoso_casos FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_menus_updated_at BEFORE UPDATE ON menus FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
+

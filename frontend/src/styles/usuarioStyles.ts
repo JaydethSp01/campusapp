@@ -916,3 +916,4 @@ const usuarioStyles = StyleSheet.create({
 });
 
 export default usuarioStyles;
+

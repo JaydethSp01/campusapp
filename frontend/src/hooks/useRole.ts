@@ -48,38 +48,38 @@ export const useRole = () => {
     
     return {
       // Dashboard
-      canViewDashboard: hasAnyRole(['admin', 'docente', 'estudiante']),
-      
+      canViewDashboard: hasAnyRole(["admin", "docente", "estudiante"]),
+
       // Users
-      canManageUsers: hasRole('admin'),
-      canViewUsers: hasAnyRole(['admin', 'docente']),
-      
+      canManageUsers: hasRole("admin"),
+      canViewUsers: hasAnyRole(["admin", "docente"]),
+
       // Reports
-      canViewReports: hasAnyRole(['admin', 'docente', 'estudiante']),
-      canManageReports: hasAnyRole(['admin', 'docente']),
-      
+      canViewReports: hasAnyRole(["admin", "docente", "estudiante"]),
+      canManageReports: hasAnyRole(["admin", "docente"]),
+
       // Wellness
-      canViewWellness: hasAnyRole(['admin', 'docente', 'estudiante']),
-      canManageWellness: hasAnyRole(['admin', 'docente']),
-      
+      canViewWellness: hasAnyRole(["admin", "docente", "estudiante"]),
+      canManageWellness: hasAnyRole(["admin", "docente"]),
+
       // Menu
-      canViewMenu: hasAnyRole(['admin', 'docente', 'estudiante']),
-      canManageMenu: hasAnyRole(['admin', 'comedor']),
-      
+      canViewMenu: hasAnyRole(["admin", "docente", "estudiante"]),
+      canManageMenu: hasAnyRole(["admin", "comedor"]),
+
       // Notifications
-      canViewNotifications: hasAnyRole(['admin', 'docente', 'estudiante']),
-      canManageNotifications: hasRole('admin'),
-      
+      canViewNotifications: hasAnyRole(["admin", "docente", "estudiante"]),
+      canManageNotifications: hasRole("admin"),
+
       // SOS
-      canViewSOS: hasAnyRole(['admin', 'docente']),
-      canManageSOS: hasAnyRole(['admin', 'docente']),
-      
+      canViewSOS: hasAnyRole(["admin", "docente"]),
+      canManageSOS: hasAnyRole(["admin", "docente"]),
+
       // Analytics
-      canViewAnalytics: hasAnyRole(['admin', 'docente']),
-      canExportData: hasAnyRole(['admin', 'docente']),
-      
+      canViewAnalytics: hasRole("admin"),
+      canExportData: hasRole("admin"),
+
       // System
-      canManageSystem: hasRole('admin'),
+      canManageSystem: hasRole("admin"),
     };
   };
 
@@ -159,8 +159,8 @@ export const useRole = () => {
     }
 
     // Pantalla específica para docentes
-    if (permissions.canViewAnalytics && hasRole('docente')) {
-      screens.push('DocenteDashboardScreen');
+    if (hasRole("docente")) {
+      screens.push("DocenteDashboardScreen");
     }
 
     return screens;

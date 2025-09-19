@@ -27,3 +27,4 @@ export interface AuditoriaLog {
   createdAt: Date;
 }
 
+
