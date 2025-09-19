@@ -1,0 +1,80 @@
+version: "3.8"
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: campusapp-postgres
+    environment:
+      POSTGRES_DB: campusapp
+      POSTGRES_USER: campusapp
+      POSTGRES_PASSWORD: campusapp123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+      - ./database/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql
+    networks:
+      - campusapp-network
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: campusapp-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - campusapp-network
+
+  # Backend API
+  backend:
+    build: ./backend
+    container_name: campusapp-backend
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DATABASE_URL: postgresql://campusapp:campusapp123@postgres:5432/campusapp
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: your-super-secret-jwt-key-here
+      JWT_REFRESH_SECRET: your-super-secret-refresh-key-here
+      BCRYPT_ROUNDS: 12
+      UPLOAD_PATH: /app/uploads
+      MAX_FILE_SIZE: 5242880
+      RATE_LIMIT_WINDOW_MS: 900000
+      RATE_LIMIT_MAX_REQUESTS: 100
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./uploads:/app/uploads
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - campusapp-network
+
+  # Nginx Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    container_name: campusapp-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./ssl:/etc/nginx/ssl
+    depends_on:
+      - backend
+    networks:
+      - campusapp-network
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  campusapp-network:
+    driver: bridge
+
