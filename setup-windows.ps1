@@ -71,16 +71,55 @@ function Install-PostgreSQL {
         $pgUrl = "https://get.enterprisedb.com/postgresql/postgresql-13.7-1-windows-x64.exe"
         $pgInstaller = "$env:TEMP\postgresql-installer.exe"
         
-        Invoke-WebRequest -Uri $pgUrl -OutFile $pgInstaller
-        Start-Process $pgInstaller -Wait -ArgumentList "--mode unattended --superpassword admin123 --servicename postgresql --serviceaccount postgres --servicepassword admin123"
-        Remove-Item $pgInstaller
+        Write-Info "Descargando PostgreSQL..."
+        Invoke-WebRequest -Uri $pgUrl -OutFile $pgInstaller -UseBasicParsing
+        
+        Write-Info "Instalando PostgreSQL (esto puede tomar varios minutos)..."
+        $installArgs = @(
+            "--mode", "unattended",
+            "--superpassword", "admin123",
+            "--servicename", "postgresql",
+            "--serviceaccount", "postgres",
+            "--servicepassword", "admin123",
+            "--enable-components", "server,pgAdmin,commandlinetools",
+            "--disable-components", "stackbuilder"
+        )
+        
+        Start-Process $pgInstaller -ArgumentList $installArgs -Wait
+        
+        # Esperar un poco para que se complete la instalación
+        Start-Sleep -Seconds 10
+        
+        # Agregar PostgreSQL al PATH
+        $pgPath = "C:\Program Files\PostgreSQL\13\bin"
+        if (Test-Path $pgPath) {
+            $env:PATH += ";$pgPath"
+            [Environment]::SetEnvironmentVariable("PATH", $env:PATH, [EnvironmentVariableTarget]::Machine)
+        }
         
         # Iniciar servicio PostgreSQL
+        Write-Info "Iniciando servicio PostgreSQL..."
         Start-Service postgresql
         
-        Write-Success "PostgreSQL instalado correctamente"
+        # Esperar a que el servicio esté listo
+        $timeout = 60
+        $elapsed = 0
+        do {
+            Start-Sleep -Seconds 2
+            $elapsed += 2
+            $service = Get-Service postgresql -ErrorAction SilentlyContinue
+        } while ($service.Status -ne "Running" -and $elapsed -lt $timeout)
+        
+        if ($service.Status -eq "Running") {
+            Write-Success "PostgreSQL instalado y ejecutándose correctamente"
+        } else {
+            Write-Warning "PostgreSQL instalado pero no se pudo iniciar automáticamente"
+        }
+        
+        Remove-Item $pgInstaller -ErrorAction SilentlyContinue
     } catch {
         Write-Error "Error instalando PostgreSQL: $($_.Exception.Message)"
+        Write-Info "Intenta instalar PostgreSQL manualmente desde: https://www.postgresql.org/download/windows/"
         exit 1
     }
 }
@@ -109,20 +148,63 @@ function New-CampusDatabase {
     try {
         $env:PGPASSWORD = "admin123"
         
+        # Esperar a que PostgreSQL esté completamente listo
+        Write-Info "Esperando a que PostgreSQL esté listo..."
+        $maxAttempts = 30
+        $attempt = 0
+        do {
+            $attempt++
+            try {
+                & psql -U postgres -h localhost -c "SELECT 1;" 2>$null
+                if ($LASTEXITCODE -eq 0) {
+                    break
+                }
+            } catch {
+                # Ignorar errores de conexión
+            }
+            Start-Sleep -Seconds 2
+        } while ($attempt -lt $maxAttempts)
+        
+        if ($attempt -eq $maxAttempts) {
+            Write-Error "No se pudo conectar a PostgreSQL después de $maxAttempts intentos"
+            exit 1
+        }
+        
         # Crear base de datos
-        & psql -U postgres -h localhost -c "CREATE DATABASE campusapp;" 2>$null
+        Write-Info "Creando base de datos campusapp..."
+        & psql -U postgres -h localhost -c "DROP DATABASE IF EXISTS campusapp;"
+        & psql -U postgres -h localhost -c "CREATE DATABASE campusapp;"
+        
+        if ($LASTEXITCODE -ne 0) {
+            throw "Error creando la base de datos"
+        }
         
         # Ejecutar script de esquema
         Write-Info "Ejecutando script de esquema..."
-        & psql -U postgres -h localhost -d campusapp -f "database\schema.sql"
+        if (Test-Path "database\schema.sql") {
+            & psql -U postgres -h localhost -d campusapp -f "database\schema.sql"
+            if ($LASTEXITCODE -ne 0) {
+                throw "Error ejecutando script de esquema"
+            }
+        } else {
+            Write-Warning "Archivo database\schema.sql no encontrado"
+        }
         
         # Ejecutar script de datos
         Write-Info "Ejecutando script de datos..."
-        & psql -U postgres -h localhost -d campusapp -f "database\seed.sql"
+        if (Test-Path "database\seed.sql") {
+            & psql -U postgres -h localhost -d campusapp -f "database\seed.sql"
+            if ($LASTEXITCODE -ne 0) {
+                throw "Error ejecutando script de datos"
+            }
+        } else {
+            Write-Warning "Archivo database\seed.sql no encontrado"
+        }
         
         Write-Success "Base de datos creada y configurada correctamente"
     } catch {
         Write-Error "Error creando base de datos: $($_.Exception.Message)"
+        Write-Info "Verifica que PostgreSQL esté ejecutándose y que los archivos de base de datos existan"
         exit 1
     }
 }
@@ -158,20 +240,70 @@ function Start-Services {
     
     # Crear archivo .env si no existe
     if (-not (Test-Path "backend\.env")) {
-        Copy-Item "backend\env.example" "backend\.env"
-        Write-Success "Archivo .env creado"
+        if (Test-Path "backend\env.example") {
+            Copy-Item "backend\env.example" "backend\.env"
+            Write-Success "Archivo .env creado"
+        } else {
+            Write-Warning "Archivo env.example no encontrado, creando .env básico"
+            $envContent = @"
+# Database
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=campusapp
+DB_USER=postgres
+DB_PASSWORD=admin123
+
+# JWT
+JWT_SECRET=tu_jwt_secret_muy_seguro_aqui
+JWT_REFRESH_SECRET=tu_refresh_secret_muy_seguro_aqui
+
+# Server
+PORT=3000
+NODE_ENV=development
+
+# Rate Limiting
+RATE_LIMIT_WINDOW_MS=60000
+RATE_LIMIT_MAX_REQUESTS=1000
+"@
+            $envContent | Out-File -FilePath "backend\.env" -Encoding UTF8
+        }
+    }
+    
+    # Verificar que las dependencias estén instaladas
+    if (-not (Test-Path "backend\node_modules")) {
+        Write-Info "Instalando dependencias del backend..."
+        Set-Location "backend"
+        & npm install
+        Set-Location ".."
+    }
+    
+    if (-not (Test-Path "frontend\node_modules")) {
+        Write-Info "Instalando dependencias del frontend..."
+        Set-Location "frontend"
+        & npm install
+        Set-Location ".."
     }
     
     # Iniciar backend
-    Write-Info "Iniciando backend..."
-    Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$PWD\backend'; npm run dev"
+    Write-Info "Iniciando backend en puerto 3000..."
+    $backendScript = @"
+cd '$PWD\backend'
+Write-Host 'Iniciando backend...' -ForegroundColor Green
+npm run dev
+"@
+    Start-Process powershell -ArgumentList "-NoExit", "-Command", $backendScript
     
-    # Esperar un poco
-    Start-Sleep -Seconds 3
+    # Esperar un poco para que el backend inicie
+    Start-Sleep -Seconds 5
     
     # Iniciar frontend
-    Write-Info "Iniciando frontend..."
-    Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$PWD\frontend'; npm start"
+    Write-Info "Iniciando frontend en puerto 8081..."
+    $frontendScript = @"
+cd '$PWD\frontend'
+Write-Host 'Iniciando frontend...' -ForegroundColor Green
+npm start
+"@
+    Start-Process powershell -ArgumentList "-NoExit", "-Command", $frontendScript
     
     Write-Success "Servicios iniciados"
 }
